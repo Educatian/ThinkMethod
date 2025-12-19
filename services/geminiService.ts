@@ -1,15 +1,15 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 export const analyzeResearchQuestion = async (question: string): Promise<string | null> => {
   try {
+    if (!ai) {
+      console.warn('Gemini API key not configured');
+      return null;
+    }
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Analyze the following research question and classify its primary nature. Your answer MUST be one of four categories: "Descriptive", "Relational", "Causal", or "Mixed-Methods".
@@ -35,14 +35,14 @@ export const analyzeResearchQuestion = async (question: string): Promise<string 
         temperature: 0,
       }
     });
-    
+
     const jsonStr = response.text.trim();
     const result = JSON.parse(jsonStr);
 
     if (result && result.researchNature && ['Descriptive', 'Relational', 'Causal', 'Mixed-Methods'].includes(result.researchNature)) {
       return result.researchNature;
     }
-    
+
     return null;
   } catch (error) {
     console.error("Error analyzing research question:", error);

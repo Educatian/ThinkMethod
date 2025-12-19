@@ -15,7 +15,7 @@ interface ChatAdvisorProps {
     currentDesign?: string;
 }
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
 
 // Build knowledge base from research designs
