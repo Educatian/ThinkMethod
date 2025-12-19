@@ -1,0 +1,5 @@
+{
+  "name": "AI Research Design Advisor",
+  "description": "An application to guide students and researchers from a research question to a suitable research design using a guided wizard and AI-powered suggestions.",
+  "requestFramePermissions": []
+}
